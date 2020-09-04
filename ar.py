@@ -24,7 +24,7 @@ class Arbitrage:
                 self.maxhistory[cn] = max(uniswapv2_amount, curve_amount)
                 self.maxhistory_unit[cn]= max(uniswapv2_amount, curve_amount)/1000000000000000000
         
-    def check(self, realmode=False):
+    def check(self, max_ratio=1.003, realmode=False):
         check_list = {}
         amount_list = {}
         for cn in coinapi.coin_list:
@@ -36,7 +36,6 @@ class Arbitrage:
                 amount_list[cn] = maxamount 
         
         print("ValueRatio: "+ str(check_list))
-        max_ratio = 1.003
         max_cn = ""
 
         for cn in check_list:
