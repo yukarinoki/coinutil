@@ -1,4 +1,6 @@
 import coinapi
+import time
+swaptime = 180
 
 class Arbitrage:
     def __init__(self, init_coin, init_amount):
@@ -22,7 +24,7 @@ class Arbitrage:
                 self.maxhistory[cn] = max(uniswapv2_amount, curve_amount)
                 self.maxhistory_unit[cn]= max(uniswapv2_amount, curve_amount)/1000000000000000000
         
-    def check(self):
+    def check(self, realmode=False):
         check_list = {}
         amount_list = {}
         for cn in coinapi.coin_list:
@@ -53,9 +55,9 @@ class Arbitrage:
             self.maxhistory[max_cn] = amount_list[max_cn]
             self.maxhistory_unit[max_cn] = self.maxhistory[max_cn]/1000000000000000000
             print("Swap!! "+self.previous_coin + "->" + self.current_coin)
-            print("")
-            return ""
-            # return self.previous_coin + "::" + self.current_coin
+            if(realmode):
+                sleep(swaptime)
+            return self.previous_coin + "::" + self.current_coin
 
     def print(self):
         print("CC: " + self.current_coin + " " + str(self.maxhistory_unit))
