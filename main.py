@@ -2,8 +2,13 @@ import ar
 import time
 import datetime
 
-arb = ar.Arbitrage("USDT", 9400000000000000000)
+initial_amount=10000
+initial_coin="USDT"
+
+print("initial asset "+str(initial_amount)+" "+initial_coin)
+arb = ar.Arbitrage(initial_coin, initial_amount*1000000000000000000)
 itr = 0
+
 while True:
     time.sleep(5)
     arb.check(realmode=True)
