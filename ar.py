@@ -52,7 +52,7 @@ class Arbitrage:
             self.maxhistory[max_cn] = amount_list[max_cn]
             print("SWAP!! " + self.previous_coin + "::" + self.current_coin)
             if(realmode):
-                sleep(swaptime)
+                time.sleep(swaptime)
             return self.previous_coin + "::" + self.current_coin
 
     def print(self):
