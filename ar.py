@@ -52,8 +52,10 @@ class Arbitrage:
             self.previous_coin = self.current_coin
             self.current_coin = max_cn
             self.current_amount = amount_list[max_cn]
-            self.maxhistory[max_cn] = amount_list[max_cn]
-            self.maxhistory_unit[max_cn] = self.maxhistory[max_cn]/1000000000000000000
+            for cn in amount_list:
+                if amount_list[cn] > self.maxhistory[cn] : 
+                    self.maxhistory[cn] = amount_list[cn]
+                    self.maxhistory_unit[cn] = self.maxhistory[cn] / 1000000000000000000
             print("Swap!! "+self.previous_coin + "->" + self.current_coin)
             if(realmode):
                 time.sleep(swaptime)
