@@ -9,6 +9,7 @@ class Arbitrage:
         self.current_amount = init_amount
         self.previous_coin = "None"
         self.maxhistory = {}
+        self.maxhistory_unit={}
 
         self.maxhistory[init_coin] = init_amount
 
@@ -19,6 +20,7 @@ class Arbitrage:
                 uniswapv2_amount = coinapi.Uniswapv2(init_coin, cn, init_amount)
                 curve_amount = coinapi.Curve(init_coin, cn, init_amount)
                 self.maxhistory[cn] = max(uniswapv2_amount, curve_amount)
+                self.maxhistory_unit[cn]= max(uniswapv2_amount, curve_amount)/1000000000000000000
         
     def check(self):
         check_list = {}
@@ -28,7 +30,7 @@ class Arbitrage:
                 uniswapv2_amount = coinapi.Uniswapv2(self.current_coin, cn, self.current_amount)
                 curve_amount = coinapi.Curve(self.current_coin, cn, self.current_amount)
                 maxamount =  max(uniswapv2_amount, curve_amount)
-                check_list[cn] = maxamount / self.maxhistory[cn]
+                check_list[cn] = maxamount / self.maxhistory[cn]   
                 amount_list[cn] = maxamount 
         
         print("ValueRatio: "+ str(check_list))
@@ -39,17 +41,23 @@ class Arbitrage:
             if check_list[cn] > max_ratio:
                 max_cn = cn
                 max_ratio = check_list[cn]
+                print(cn)
         
         if max_cn == "":
+            print("no exchange")
             return ""
         else :
             self.previous_coin = self.current_coin
             self.current_coin = max_cn
             self.current_amount = amount_list[max_cn]
             self.maxhistory[max_cn] = amount_list[max_cn]
-            return self.previous_coin + "::" + self.current_coin
+            self.maxhistory_unit[max_cn] = self.maxhistory[max_cn]/1000000000000000000
+            print("Swap!! "+self.previous_coin + "->" + self.current_coin)
+            print("")
+            return ""
+            # return self.previous_coin + "::" + self.current_coin
 
     def print(self):
-        print("CC: " + self.current_coin + " " + str(self.maxhistory))
+        print("CC: " + self.current_coin + " " + str(self.maxhistory_unit))
     
 
