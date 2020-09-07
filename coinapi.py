@@ -17,7 +17,13 @@ def get_coin_amount(from_coin, to_coin, amount, footurl = FOOTURL, DEBUG=False):
         return 0
 
     apiurl =  baseurl + "fromTokenSymbol=" + from_coin + "&toTokenSymbol=" + to_coin + "&amount=" + str(int(amount / n12 if coin_list[from_coin] == 6 else amount)) + footurl
-    res = requests.get(apiurl).json()
+    
+    try:
+        res = requests.get(apiurl).json()
+    except Exception as e:
+        print(e)
+        return 0
+
     if DEBUG:
         print(res)
     to_amount = 0
