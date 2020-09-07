@@ -37,6 +37,7 @@ class Arbitrage:
     def check(self, max_ratio=1.002, max_ratio_sUSD = 1.01, realmode=False):
         dex_list = {}
         compare_list = {}
+
         amount_list = {}
         ratio_list= {}
         max_ratio_list={}
