@@ -6,8 +6,7 @@ FOOTURL = "&disabledExchangesList=Pathfinder,Oasis,Uniswap,Kyber,Balancer,Bancor
 n18 = 1000000000000000000
 n6 = 1000000
 n12 = 1000000000000
-coin_list = {"DAI": 18, "USDC": 6, "USDT": 6, "TUSD": 18, "BUSD": 18, "sUSD": 18, "PAX": 18}
-transaction_fee = 0
+coin_list = {"DAI": 18, "USDC": 6, "USDT": 6, "TUSD": 18, "BUSD": 18, "sUSD": 18}
 
 def CoinNameIsValid(coin_name):
     return coin_name in coin_list
