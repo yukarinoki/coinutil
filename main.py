@@ -24,7 +24,6 @@ itr = 0
 while True:
     time.sleep(5)
     arb.check(max_ratio=args.ratio,max_ratio_sUSD = args.ratio_sUSD, realmode=args.realmode)
-    arb.check(max_ratio=args.ratio, realmode=args.realmode)
 
     ct = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
     print(str(ct) + ": itr = " + str(itr))
