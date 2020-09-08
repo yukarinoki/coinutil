@@ -3,10 +3,6 @@ import time
 import datetime
 import argparse 
 
-parser = argparse.ArgumentParser(description='Performing arbitrage trade of stable coin.') 
-parser.add_argument('--realmode', action='store_true')
-parser.add_argument('--ratio', type=float, default=1.003)
-args = parser.parse_args()
 
 parser = argparse.ArgumentParser(description='Performing arbitrage trade of stable coin.') 
 parser.add_argument('--realmode', action='store_true')
@@ -23,10 +19,11 @@ itr = 0
 
 while True:
     time.sleep(5)
-    arb.check(max_ratio=args.ratio,max_ratio_sUSD = args.ratio_sUSD, realmode=args.realmode)
-
+    
     ct = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
     print(str(ct) + ": itr = " + str(itr))
-    # arb.print()
+
+    arb.check(max_ratio=args.ratio,max_ratio_sUSD = args.ratio_sUSD, realmode=args.realmode)
+    arb.print()
     itr = itr + 1
 
