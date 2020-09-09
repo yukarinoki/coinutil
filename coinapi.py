@@ -1,40 +1,91 @@
 import requests
 
 baseurl = "https://api.1inch.exchange/v1.1/quote?"
-FOOTURL = "&disabledExchangesList=Pathfinder,Oasis,Uniswap,Kyber,Balancer,Bancor,PMM2,0x Relays,Mooniswap,PMM,AirSwap,DODO,dForce Swap,mStable"
+
 # fromTokenSymbol=DAI&toTokenSymbol=sUSD&amount=1000000000000000000000
 n18 = 1000000000000000000
 n6 = 1000000
 n12 = 1000000000000
 coin_list = {"DAI": 18, "USDC": 6, "USDT": 6, "TUSD": 18, "BUSD": 18, "sUSD": 18}
-transaction_fee = 0
+dex_list = {"Uniswap V2":"Uniswap V2","Curve":"Curve.fi v2,Curve.fi iearn,Curve.fi BUSD,Curve.fi sUSD,Curve.fi PAX","Balancer":"Balancer","Swerve":"Swerve.fi","Mooniswap":"Mooniswap","Pathfinder":"Pathfinder","Oasis":"Oasis","Uniswap":"Uniswap","Kyber":"Kyber","Bancor":"Bancor","PMM2":"PMM2","0x Relays":"0x Relays","PMM":"PMM","AirSwap":"AirSwap","DODO":"DODO","dForce Swap":"dForce Swap","mStable":"mStable"}
+
 
 def CoinNameIsValid(coin_name):
     return coin_name in coin_list
 
-def get_coin_amount(from_coin, to_coin, amount, footurl = FOOTURL, DEBUG=False):
-    if (not from_coin in coin_list) or (not to_coin in coin_list):
-        return 0
-
-    apiurl =  baseurl + "fromTokenSymbol=" + from_coin + "&toTokenSymbol=" + to_coin + "&amount=" + str(int(amount / n12 if coin_list[from_coin] == 6 else amount)) + footurl
-    res = requests.get(apiurl).json()
-    if DEBUG:
-        print(res)
+def get_coin_amount(from_coin, to_coin, amount, dex_valid=["Uniswap V2","Curve","Balancer","Swerve"], DEBUG=False):
+    dex_used = {}
     to_amount = 0
 
+
+    if (not from_coin in coin_list) or (not to_coin in coin_list):
+        return {"to_amount":to_amount,"dex_used":dex_used}
+
+    footurl = "&disabledExchangesList="
+    for dex in dex_list:
+        if dex not in dex_valid:
+            if footurl != "&disabledExchangesList=":
+                footurl = footurl+ ","
+            footurl = footurl+ dex_list[dex]        
+
+    apiurl =  baseurl + "fromTokenSymbol=" + from_coin + "&toTokenSymbol=" + to_coin + "&amount=" + str(int(amount / n12 if coin_list[from_coin] == 6 else amount)) + footurl
+    
+
+    dex_used = {}
+    to_amount = 0
+
+    try:
+        res = requests.get(apiurl).json()
+    except Exception as e:
+        print(e)
+        return {"to_amount":to_amount,"dex_used":dex_used}
+
+    if DEBUG:
+        print(res)
+
     if not "toToken" in res:
-        print("cannot exchange in UniswapV2:  from " + from_coin + ", to: " + to_coin)
-        # print(res)
-        return 0
+        if __name__ == '__main__':
+            print("cannot exchange in"+str(dex_valid)+":  from " + from_coin + ", to: " + to_coin)
+        return {"to_amount":to_amount,"dex_used":dex_used}
+
+    for exch in res["exchanges"]:
+        if exch["part"] != 0:
+            dex_used[exch["name"]]=exch["part"]
     
     if res["toToken"]["decimals"] == 6:
         to_amount = int(res["toTokenAmount"]) * n12
     else:
         to_amount = int(res["toTokenAmount"])
     
-    return to_amount
+    return {"to_amount":to_amount,"dex_used":dex_used}
 
 def Uniswapv2(from_coin, to_coin, amount, DEBUG=False):
-    return get_coin_amount(from_coin, to_coin, amount, footurl = FOOTURL + ",Curve.fi v2,Curve.fi iearn,Curve.fi BUSD,Curve.fi sUSD,Curve.fi PAX", DEBUG=DEBUG)
-def Curve(from_coin, to_coin, amount):
-    return get_coin_amount(from_coin, to_coin, amount, footurl = FOOTURL + ",Uniswap V2")
+    return get_coin_amount(from_coin, to_coin, amount, dex_valid=["Uniswap V2"], DEBUG=DEBUG)["to_amount"]
+def Curve(from_coin, to_coin, amount, DEBUG=False):
+    return get_coin_amount(from_coin, to_coin, amount, dex_valid=["Curve"], DEBUG=DEBUG)["to_amount"]
+def Balancer(from_coin, to_coin, amount, DEBUG=False):
+    return get_coin_amount(from_coin, to_coin, amount, dex_valid=["Balancer"], DEBUG=DEBUG)["to_amount"]
+def Swerve(from_coin, to_coin, amount, DEBUG=False):
+    return get_coin_amount(from_coin, to_coin, amount, dex_valid=["Swerve"], DEBUG=DEBUG)["to_amount"]
+
+
+def best_dex(from_coin, to_coin, amount, dex_valid=["Uniswap V2","Curve","Balancer","Swerve"]):
+    best_amount = 0
+    for dex in dex_valid:
+        if get_coin_amount(from_coin, to_coin, amount, [dex])["to_amount"] > best_amount:
+            best_amount = get_coin_amount(from_coin, to_coin, amount, [dex])["to_amount"]
+            a_dex_used = list(get_coin_amount(from_coin, to_coin, amount, [dex])["dex_used"].keys())[0]
+    return {"to_amount":best_amount, "dex_used":a_dex_used}
+
+if __name__ == '__main__':
+    print(best_dex("USDT","DAI",n18*10000))
+    print(best_dex("USDT","DAI",n18*1000))
+    print(best_dex("USDT","DAI",n18*100))
+    print(best_dex("USDT","DAI",n18*10))
+    print(best_dex("USDT","DAI",n18*1))
+    print(get_coin_amount("USDT","DAI",n18*10000))
+    print(get_coin_amount("USDT","DAI",n18*1000))
+    print(get_coin_amount("USDT","DAI",n18*100))
+    print(get_coin_amount("USDT","DAI",n18*10))
+    print(get_coin_amount("USDT","DAI",n18*1))
+    
