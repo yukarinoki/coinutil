@@ -72,9 +72,10 @@ def Swerve(from_coin, to_coin, amount, DEBUG=False):
 def best_dex(from_coin, to_coin, amount, dex_valid=["Uniswap V2","Curve","Balancer","Swerve"]):
     best_amount = 0
     for dex in dex_valid:
-        if get_coin_amount(from_coin, to_coin, amount, [dex])["to_amount"] > best_amount:
-            best_amount = get_coin_amount(from_coin, to_coin, amount, [dex])["to_amount"]
-            a_dex_used = list(get_coin_amount(from_coin, to_coin, amount, [dex])["dex_used"].keys())[0]
+        output = get_coin_amount(from_coin, to_coin, amount, [dex])
+        if output["to_amount"] > best_amount:
+            best_amount = output["to_amount"]
+            a_dex_used = list(output["dex_used"].keys())[0]
     return {"to_amount":best_amount, "dex_used":a_dex_used}
 
 if __name__ == '__main__':
