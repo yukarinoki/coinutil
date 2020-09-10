@@ -1,7 +1,18 @@
 import coinapi
 import time
+import requests
+
 transaction_time = 180
 transaction_fee=4 #単位は$
+
+
+def line_notify(notification_message):
+    # LINEに通知
+    line_notify_token = '4XgAxKIqqvLW8fE36vVvu1MZfKJX4DbQtD0C0LMUFA6'#ここに取得したtokenを入力
+    line_notify_api = 'https://notify-api.line.me/api/notify'
+    headers = {'Authorization': f'Bearer {line_notify_token}'}
+    data = {'message': f'message: {notification_message}'}
+    requests.post(line_notify_api, headers = headers, data = data)
 
 n18=1000000000000000000
 amount_small=100
@@ -28,6 +39,8 @@ class Arbitrage:
                 self.maxhistory[cn] = coinapi.best_dex(init_coin, cn, init_amount,dex_valid)["to_amount"] - transaction_fee * n18
                 self.maxhistory_unit[cn] = self.maxhistory[cn]/n18
                 self.current_rate[cn] = coinapi.best_dex(init_coin, cn, amount_small*n18,dex_valid)["to_amount"]/(n18*amount_small)
+
+        line_notify("maxhistory : "+str(self.maxhistory_unit))
         
     def check(self, max_ratio=1.002, max_ratio_sUSD=1.01,dex_valid=["Uniswap V2","Curve","Balancer","Swerve"], realmode=False):
         dex_used = {}
@@ -66,16 +79,18 @@ class Arbitrage:
             if ratio_list[cn] > 1.001:
                 cheap_coin_num += 1
         
-        if cheap_coin_num >= 3:
-            print(self.current_coin+" price incleased")
-        elif cheap_coin_num == 2 or cheap_coin_num == 1 :
-            print(max_cn+" prise decreased")
+        if max_cn == "":
+            if cheap_coin_num >= 3:
+                print(self.current_coin+" price incleased")
+            elif cheap_coin_num == 2 or cheap_coin_num == 1 :
+                print(max_cn+" prise decreased")
 
         print("ValueRatio: "+ str(ratio_list))
 
         if max_cn == "":
             return ""
         else :
+            previous_amount_unit = self.current_amount/n18
             self.previous_coin = self.current_coin
             self.current_coin = max_cn
             self.current_amount = amount_list[max_cn]
@@ -93,12 +108,19 @@ class Arbitrage:
         
             print("Swap in　"+ dex_used[self.current_coin] +" : "+ self.previous_coin + " -> " + self.current_coin)
             print("maxhistory:" + str(self.maxhistory_unit))
+            #LINEに通知 
+            line_notify("Swap in　"+ dex_used[self.current_coin] +" ... "+ self.previous_coin +" : "+ str(previous_amount_unit)+ " -> " + self.current_coin + " : "+str(self.maxhistory_unit[self.current_coin]))
+            line_notify("maxhistory : "+str(self.maxhistory_unit))
+
             if(realmode):
                 time.sleep(transaction_time)
-            return self.previous_coin + "::" + self.current_coin
-            
+            return self.previous_coin + "::" + str(self.current_coin)
 
-    def print(self):       
+
+    def print(self):  
         print("CC:" + self.current_coin + " , maxhistory:" + str(self.maxhistory_unit))
     
+    
+    
+
 
