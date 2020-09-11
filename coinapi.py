@@ -16,8 +16,7 @@ def CoinNameIsValid(coin_name):
 def get_coin_amount(from_coin, to_coin, amount, dex_valid=["Uniswap V2","Curve","Balancer","Swerve"], DEBUG=False):
     dex_used = {}
     to_amount = 0
-
-
+    
     if (not from_coin in coin_list) or (not to_coin in coin_list):
         return {"to_amount":to_amount,"dex_used":dex_used}
 
@@ -29,7 +28,6 @@ def get_coin_amount(from_coin, to_coin, amount, dex_valid=["Uniswap V2","Curve",
             footurl = footurl+ dex_list[dex]        
 
     apiurl =  baseurl + "fromTokenSymbol=" + from_coin + "&toTokenSymbol=" + to_coin + "&amount=" + str(int(amount / n12 if coin_list[from_coin] == 6 else amount)) + footurl
-    
 
     dex_used = {}
     to_amount = 0
