@@ -33,7 +33,7 @@ while True:
     print(str(ct) + ": itr = " + str(itr))
     res = arb.check(max_ratio=args.ratio, max_ratio_sUSD = args.ratio_sUSD, dex_valid=dex, realmode=args.realmode)
     if res["swap"]:
-        line_notify("Swap in　"+ res["dex_used"] +" ... "+ arb.previous_coin +" : "+ str(previous_amount_unit)+ " -> " + arb.current_coin + " : "+str(arb.maxhistory_unit[arb.current_coin]))
+        line_notify("Swap in　"+ res["dex_used"] +" ... "+ arb.previous_coin +" : "+ str(arb.maxhistory_unit[arb.previous_coin]) + " -> " + arb.current_coin + " : "+str(arb.maxhistory_unit[arb.current_coin]))
         line_notify("maxhistory : "+str(arb.maxhistory_unit))
 
     arb.print()
