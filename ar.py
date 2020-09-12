@@ -99,7 +99,7 @@ class Arbitrage:
             if(realmode):
                 time.sleep(transaction_time)
 
-            return {"isswapped": True, "dex_used": dex_used[self.current_coin]}
+            return {"swap": True, "dex_used": dex_used[self.current_coin]}
 
 
     def print(self):  
