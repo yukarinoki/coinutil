@@ -1,18 +1,24 @@
 import requests
 import json
 import coinapi
+import os
 
 n18 = 1000000000000000000
 
 API_KEY = "HNAEZWNGRX3BT15NG7PWEZC1CJZDM1G4Z2"
 MEW_ADDRESS = "0x751BF82449F4D8Ac4E8524E920F33D5849C995be"
 
+
 contract_address_list = {}
-tokens = json.load(open("ethTokens.json", "r"))
+ethToken_path = os.path.join(os.path.dirname(__file__), "ethTokens.json")
+tokens = json.load(open(ethToken_path, "r"))
+
+
 
 for cn_info in tokens:
     if cn_info["symbol"] in coinapi.coin_list:
         contract_address_list[cn_info["symbol"]] = cn_info["address"]
+
 
 baseurl = "https://api.etherscan.io/api?"
 
@@ -31,7 +37,7 @@ def get_account_balance(coin_name,address=MEW_ADDRESS,api_key=API_KEY):
 
 def get_max_coin():
     max_coin_amount = 0
-    max_coin = ""
+    max_coin = "No stable coin"
     for cn in coinapi.coin_list:
         coin_amount = get_account_balance(cn)
         if coin_amount > max_coin_amount:
@@ -41,7 +47,7 @@ def get_max_coin():
 
 
 if __name__ ==  "__main__":
-    print(get_account_balance("BUSD"))
+    print(get_account_balance("DAI"))
     print(get_account_balance("ETH"))
     print(get_max_coin())
     
