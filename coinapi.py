@@ -7,7 +7,7 @@ n18 = 1000000000000000000
 n6 = 1000000
 n12 = 1000000000000
 coin_list = {"DAI": 18, "USDC": 6, "USDT": 6, "TUSD": 18, "BUSD": 18, "sUSD": 18}
-dex_list = {"Uniswap V2":"Uniswap V2", "Curve":"Curve.fi v2,Curve.fi iearn,Curve.fi BUSD,Curve.fi sUSD,Curve.fi PAX","Balancer":"Balancer","Swerve":"Swerve.fi","Mooniswap":"Mooniswap","Pathfinder":"Pathfinder","Oasis":"Oasis","Uniswap":"Uniswap","Kyber":"Kyber","Bancor":"Bancor","PMM2":"PMM2","0x Relays":"0x Relays", "PMM":"PMM", "AirSwap":"AirSwap", "DODO":"DODO", "dForce Swap":"dForce Swap", "mStable":"mStable"}
+dex_list = {"Uniswap V2":"Uniswap V2", "Curve":"Curve.fi,Curve.fi v2,Curve.fi iearn,Curve.fi BUSD,Curve.fi sUSD,Curve.fi PAX","Balancer":"Balancer","Swerve":"Swerve.fi","Mooniswap":"Mooniswap","Sushi Swap":"Sushi Swap","Pathfinder":"Pathfinder","Oasis":"Oasis","Uniswap":"Uniswap","Kyber":"Kyber","Bancor":"Bancor","PMM2":"PMM2","0x Relays":"0x Relays", "PMM":"PMM", "AirSwap":"AirSwap", "DODO":"DODO", "dForce Swap":"dForce Swap", "mStable":"mStable"}
 
 
 def CoinIsValid(coin_name):
