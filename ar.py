@@ -4,6 +4,7 @@ import time
 import requests
 
 transaction_time = 180
+transaction_fee = 4 #単位は$
 n18 = 1000000000000000000
 amount_small = 100
 
@@ -78,8 +79,10 @@ class Arbitrage:
 
         if max_cn == "": 
             return {"swap": False, "dex_used": "None"}
+          
+        else :
+            previous_amount_unit = self.current_amount/n18
 
-        else:
             self.previous_coin = self.current_coin
             self.current_coin = max_cn
             self.current_amount = amount_list[max_cn]

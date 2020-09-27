@@ -1,12 +1,12 @@
 import ar
-import etherscanapi
+# import etherscanapi
 import time
 import datetime
 import argparse
 import requests
 
 def line_notify(notification_message): # LINEに通知
-    line_notify_token = 'bGK1XgQkByxlZLw9Shyuy0q1Bi84tMw8x2gCtjbySnR'#僕のアカウントです、適宜変更してください
+    line_notify_token = '4XgAxKIqqvLW8fE36vVvu1MZfKJX4DbQtD0C0LMUFA6'
     line_notify_api = 'https://notify-api.line.me/api/notify'
     headers = {'Authorization': f'Bearer {line_notify_token}'}
     data = {'message': f'message: {notification_message}'}
@@ -18,15 +18,12 @@ parser.add_argument('--ratio', type=float, default=1.003)
 parser.add_argument('--ratio_high', type=float, default=1.01)
 args = parser.parse_args()
 
-
 # initial_asset = etherscanapi.get_max_coin()#僕のwalletで一番多いstable coinです
 # initial_amount = initial_asset["coin_amount"]
 # initial_coin = initial_asset["coin_name"]
 
 initial_amount = 10000
 initial_coin = "USDC"
-
-
 
 dex=["Uniswap V2","Curve","Balancer","Swerve","Sushi Swap"]
 #choose from ["Uniswap V2","Curve","Balancer","Swerve","Mooniswap","Sushi Swap","Pathfinder","Oasis","Uniswap","Kyber","Bancor","PMM2","0x Relays","PMM","AirSwap","DODO","dForce Swap","mStable"]
@@ -47,4 +44,4 @@ while True:
 
     arb.print()
     itr = itr + 1
-
+    
